@@ -52,6 +52,11 @@ function foo(\$bar, \$baz)
         );
     }
 
+    public function getName(): string
+    {
+        return 'SuperDJ/spaces_in_parentheses';
+    }
+
     /**
      * {@inheritdoc}
      *

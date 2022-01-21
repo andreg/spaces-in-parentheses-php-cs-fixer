@@ -9,10 +9,15 @@ use SuperDJ\SpacesInParenthesesFixer\Tests\AbstractFixerTestCase;
 
 final class SpacesInParenthesesFixerTest extends AbstractFixerTestCase
 {
+    public function testNameIsValid(): void
+    {
+        $this->assertRegExp('/^[A-Z][a-zA-Z0-9]*\/[a-z][a-z0-9_]*$/', $this->fixer->getName());
+    }
+
     public function testInvalidConfigMissingKey(): void
     {
         $this->expectException(InvalidFixerConfigurationException::class);
-        $this->expectExceptionMessageMatches('#^\[spaces_in_parentheses\] Invalid configuration: The option "a" does not exist\. Defined options are: "space"\.$#');
+        $this->expectExceptionMessageMatches('#^\[SuperDJ/spaces_in_parentheses\] Invalid configuration: The option "a" does not exist\. Defined options are: "space"\.$#');
 
         $this->fixer->configure(['a' => 1]);
     }
@@ -20,7 +25,7 @@ final class SpacesInParenthesesFixerTest extends AbstractFixerTestCase
     public function testInvalidConfigValue(): void
     {
         $this->expectException(InvalidFixerConfigurationException::class);
-        $this->expectExceptionMessageMatches('#^\[spaces_in_parentheses\] Invalid configuration: The option "space" with value "double" is invalid\. Accepted values are: "none", "spaces"\.$#');
+        $this->expectExceptionMessageMatches('#^\[SuperDJ/spaces_in_parentheses\] Invalid configuration: The option "space" with value "double" is invalid\. Accepted values are: "none", "spaces"\.$#');
 
         $this->fixer->configure(['space' => 'double']);
     }

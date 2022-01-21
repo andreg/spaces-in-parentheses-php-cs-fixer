@@ -12,7 +12,6 @@ declare(strict_types=1);
 namespace SuperDJ\SpacesInParenthesesFixer\Tests;
 
 use PhpCsFixer\Fixer\ConfigurableFixerInterface;
-use PhpCsFixer\Fixer\DeprecatedFixerInterface;
 use PhpCsFixer\Fixer\FixerInterface;
 use PhpCsFixer\Fixer\WhitespacesAwareFixerInterface;
 use PhpCsFixer\Linter\Linter;
