@@ -33,7 +33,7 @@ final class SpacesInParenthesesFixerTest extends AbstractFixerTestCase
     /**
      * @dataProvider provideFixCases
      */
-    public function testDefaultFix(string $expected, ?string $input = null): void
+    public function testDefaultFix(string $expected, string|null $input = null): void
     {
         $this->doTest($expected, $input);
     }
@@ -41,17 +41,15 @@ final class SpacesInParenthesesFixerTest extends AbstractFixerTestCase
     /**
      * @dataProvider provideSpacesFixCases
      */
-    public function testSpacesFix(string $expected, ?string $input = null): void
+    public function testSpacesFix(string $expected, string|null $input = null): void
     {
         $this->doTest($expected, $input, ['space' => 'spaces']);
     }
 
-    public function provideFixCases(): array
+    public function provideFixCases(): \Generator
     {
-        return [
-            // default leaves new lines alone
-            [
-                "<?php
+        yield 'It leaves new lines alone' => [
+            "<?php
 class Foo
 {
     private function bar()
@@ -67,156 +65,139 @@ class Foo
     }
 }
 ",
-            ],
-            [
-                '<?php foo();',
-                '<?php foo( );',
-            ],
-            [
-                '<?php
+        ];
+
+        yield 'It will remove spaces from empty parenthesis' => [
+            '<?php foo();',
+            '<?php foo( );',
+        ];
+
+        yield 'It will remove spaces in if statements' => [
+            '<?php
 if (true) {
     // if body
 }',
-                '<?php
+            '<?php
 if ( true ) {
     // if body
 }',
-            ],
-            [
-                '<?php
+        ];
+
+        yield 'It will remove multiple spaces' => [
+            '<?php
 if (true) {
     // if body
 }',
-                '<?php
+            '<?php
 if (     true   ) {
     // if body
 }',
-            ],
-            [
-                '<?php
+        ];
+
+        yield 'It will remove spaces in function declarations' => [
+            '<?php
 function foo($bar, $baz)
 {
     // function body
 }',
-                '<?php
+            '<?php
 function foo( $bar, $baz )
 {
     // function body
 }',
-            ],
-            [
-                '<?php
+        ];
+
+        yield 'It will remove spaces in chained methods' => [
+            '<?php
 $foo->bar($arg1, $arg2);',
-                '<?php
+            '<?php
 $foo->bar(  $arg1, $arg2   );',
-            ],
-            [
-                '<?php
+        ];
+
+        yield 'It will leave spaces in array methods' => [
+            '<?php
 $var = array( 1, 2, 3 );
-',
-            ],
-            [
-                '<?php
+'
+        ];
+
+        yield 'It will leave square brackets alone' => [
+            '<?php
 $var = [ 1, 2, 3 ];
 ',
-            ],
-            // list call with trailing comma - need to leave alone
-            [
-                '<?php list($path, $mode, ) = foo();',
-            ],
-            [
-                '<?php list($path, $mode,) = foo();',
-            ],
-            [
-                '<?php
+        ];
+
+        yield 'It should leave list call with trailing comma alone 1' => [
+            '<?php list($path, $mode, ) = foo();',
+        ];
+
+        yield 'It should leave list call with trailing comma alone 2' => [
+            '<?php list($path, $mode,) = foo();',
+        ];
+
+        yield 'It leaves comments alone' => [
+            '<?php
 $a = $b->test(  // do not remove space
     $e          // between `(` and `)`
                 // and this comment
 );',
-            ],
-            [
-                '<?php
-function foo($bar, $baz)
-{
-    // function body
-}',
-                '<?php
-function foo( $bar, $baz )
-{
-    // function body
-}',
-            ],
-            [
-                '<?php
-function hello($value) {
-    // code...
-}',
-                '<?php
-function hello( $value ) {
-    // code...
-}',
-            ],
-            [
-                '<?php
+        ];
+
+        yield 'It will remove spaces from use of functions' => [
+            '<?php
 $code = function ($hello, $there) use ($ami, $tumi) {
     // code
 };
 ',
-                '<?php
+            '<?php
 $code = function ( $hello, $there   ) use ( $ami, $tumi ) {
     // code
 };
 ',
-            ],
-            [
-                '<?php
+        ];
+
+        yield 'It will remove spaces from for-loop' => [
+            '<?php
 for ($i = 0; $i < 42; $i++) {
     // code...
 }
 ',
-                '<?php
+            '<?php
 for (   $i = 0; $i < 42; $i++ ) {
     // code...
 }
-',
-            ],
-            [
-                '<?php
+'
+        ];
+
+        yield 'It will remove spaces from default core method calls' => [
+            '<?php
 explode($a, $b);
 ',
-                '<?php
+            '<?php
 explode( $a, $b );
-',
-            ],
-            [
-                '<?php
-if ($something) {
-    // code
-}
-',
-                '<?php
-if (  $something      ) {
-    // code
-}
-',
-            ],
-            [
-                '<?php
+'
+        ];
+
+        yield 'It will remove spaces in nested parenthesis' => [
+            '<?php
 multiply((2 + 3) * 4);
 ',
-                '<?php
+            '<?php
 multiply( (    2 + 3  ) * 4    );
-',
-            ],
+'
+        ];
+
+        yield 'It should leave casting alone' => [
+            '<?php
+$bool = "true";
+$bool = ( bool )$bool;
+'
         ];
     }
 
-    public function provideSpacesFixCases(): array
+    public function provideSpacesFixCases(): \Generator
     {
-        return [
-            // Leaves new lines alone
-            [
-                "<?php
+        yield 'It leaves new lines alone' => [
+            "<?php
 class Foo
 {
     private function bar()
@@ -230,109 +211,98 @@ class Foo
             return 1;
         };
     }
-}",
-            ],
-            [
-                '<?php foo();',
-                '<?php foo( );',
-            ],
-            [
-                '<?php
+}"
+        ];
+
+        yield 'It will remove spaces from empty parenthesis' => [
+            '<?php foo();',
+            '<?php foo( );',
+        ];
+
+        yield 'It will add spaces in if-statements' => [
+            '<?php
 if ( true ) {
     // if body
 }',
-                '<?php
+            '<?php
 if (true) {
     // if body
-}',
-            ],
-            [
-                '<?php
+}'
+            ];
+
+        yield 'It will remove multiple spaces' => [
+            '<?php
 if ( true ) {
     // if body
 }',
-                '<?php
+            '<?php
 if (     true   ) {
     // if body
-}',
-            ],
-            [
-                '<?php
+}'
+        ];
+
+        yield 'It will add spaces in method definition' => [
+            '<?php
 function foo( $bar, $baz )
 {
     // function body
 }',
-                '<?php
+            '<?php
 function foo($bar, $baz)
 {
     // function body
 }',
-            ],
-            [
-                '<?php
+        ];
+
+        yield 'It will add spaces in chained method' => [
+            '<?php
 $foo->bar( $arg1, $arg2 );',
-                '<?php
+            '<?php
 $foo->bar(  $arg1, $arg2   );',
-            ],
-            [
-                '<?php
+        ];
+
+        yield 'It will add spaces in array method' => [
+            '<?php
 $var = array( 1, 2, 3 );
 ',
-                '<?php
+            '<?php
 $var = array(1, 2, 3);
 ',
-            ],
-            [
-                '<?php
-$var = [ 1, 2, 3 ];
-',
-            ],
-            [
-                '<?php list( $path, $mode, ) = foo();',
-                '<?php list($path, $mode,) = foo();',
-            ],
-            [
-                '<?php
+        ];
+
+        yield 'It will leave square brackets alone' => [
+            '<?php
+$var = [1, 2, 3];
+'
+        ];
+
+        yield 'It will add spaces in list method' => [
+            '<?php list( $path, $mode, ) = foo();',
+            '<?php list($path, $mode,) = foo();',
+        ];
+
+        yield 'It will leave comments alone' => [
+            '<?php
 $a = $b->test(  // do not remove space
     $e          // between `(` and `)`
                 // and this comment
- );',
-            ],
-            [
-                '<?php
-function foo( $bar, $baz )
-{
-    // function body
-}',
-                '<?php
-function foo($bar, $baz)
-{
-    // function body
-}',
-            ],
-            [
-                '<?php
-function hello( $value ) {
-    // code...
-}',
-                '<?php
-function hello($value) {
-    // code...
-}',
-            ],
-            [
-                '<?php
+ );'
+        ];
+
+        yield 'It will add spaces in use of method' => [
+            '<?php
 $code = function ( $hello, $there ) use ( $ami, $tumi ) {
     // code
 };
 ',
-                '<?php
+            '<?php
 $code = function ($hello, $there) use ($ami, $tumi) {
     // code
 };
-',
-            ],
-            [
+'
+        ];
+
+        yield 'It will add spaces in for-loops' => [
                 '<?php
 for ( $i = 0; $i < 42; $i++ ) {
     // code...
@@ -343,35 +313,31 @@ for ($i = 0; $i < 42; $i++) {
     // code...
 }
 ',
-            ],
-            [
+            ];
+
+        yield 'It will add spaces in core methods' => [
                 '<?php
 explode( $a, $b );
 ',
                 '<?php
 explode($a, $b);
 ',
-            ],
-            [
-                '<?php
-if ( $something ) {
-    // code
-}
-',
-                '<?php
-if (    $something    ) {
-    // code
-}
-',
-            ],
-            [
+            ];
+
+        yield 'It will add spaces in nested parentheses' => [
                 '<?php
 multiply( ( 2 + 3 ) * 4 );
 ',
                 '<?php
 multiply((2 + 3) * 4);
 ',
-            ],
+            ];
+
+        yield 'It will leave casting alone' => [
+                '<?php
+$bool = "true";
+$bool = (bool)$bool;
+'
         ];
     }
 
