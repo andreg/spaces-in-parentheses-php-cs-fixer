@@ -1,5 +1,7 @@
 # PHP CS Fixer: Spaces in parentheses fixer
 
+[![Packagist Downloads](https://img.shields.io/packagist/dt/superdj/spaces-in-parentheses-php-cs-fixer?style=flat-square)](https://packagist.org/packages/superdj/spaces-in-parentheses-php-cs-fixer)
+
 ## Installation
 
 Install it with the following command:
