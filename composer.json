@@ -1,5 +1,5 @@
 {
-    "name": "superdj/spaces-in-parentheses-php-cs-fixer",
+    "name": "andreg/spaces-in-parentheses-php-cs-fixer",
     "description": "A custom PHP CS Fixer to add or remove spaces in parentheses",
     "type": "library",
     "homepage": "https://github.com/SuperDJ/spaces-in-parentheses-php-cs-fixer",

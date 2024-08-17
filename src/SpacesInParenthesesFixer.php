@@ -13,6 +13,7 @@ use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
 use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
+use SuperDJ\SpacesInParenthesesFixer\NoValidateFixerConfigurationResolver;
 
 /**
  * @internal
@@ -20,6 +21,15 @@ use PhpCsFixer\Tokenizer\Tokens;
 final class SpacesInParenthesesFixer extends AbstractFixer implements ConfigurableFixerInterface
 {
     private string $singleLineWhitespaceOptions = " \t\n\r\0\x0B";
+	protected array $configuration = array();
+
+    public function configure(array $configuration): void {
+		$this->configuration = $configuration;
+	}
+
+    public function getConfigurationDefinition(): FixerConfigurationResolverInterface {
+		return new NoValidateFixerConfigurationResolver();
+	}
 
     /**
      * {@inheritdoc}
