@@ -35,13 +35,13 @@ class SpaceInsideSquareBracketsFixer extends AbstractFixer
 			}
 
 			if ( $token->equals( '[' ) ) {
-				if (!$tokens[$index + 1]->isWhitespace()) {
+				if (!$tokens[$index + 1]->isWhitespace() && !$tokens[$index + 1]->equals( ']' )) {
 					$tokens->insertAt($index + 1, new Token([T_WHITESPACE, ' ']));
 				}
 			}
 
 			if ( $token->equals( ']' ) ) {
-				if (!$tokens[$index - 1]->isWhitespace()) {
+				if (!$tokens[$index - 1]->isWhitespace() && !$tokens[$index - 1]->equals( '[' )) {
 					$tokens->insertAt($index, new Token([T_WHITESPACE, ' ']));
 				}
 			}
