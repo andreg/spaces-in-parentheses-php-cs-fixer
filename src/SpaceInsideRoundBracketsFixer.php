@@ -9,6 +9,11 @@ use PhpCsFixer\Tokenizer\Tokens;
 
 class SpaceInsideRoundBracketsFixer extends AbstractFixer
 {
+	public function getPriority(): int
+    {
+        return 20;
+    }
+
     public function getDefinition(): FixerDefinitionInterface
     {
         return new \PhpCsFixer\FixerDefinition\FixerDefinition(
