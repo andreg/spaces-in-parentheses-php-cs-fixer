@@ -4,6 +4,7 @@ namespace SuperDJ\SpacesInParenthesesFixer;
 
 use PhpCsFixer\AbstractFixer;
 use PhpCsFixer\FixerDefinition\FixerDefinitionInterface;
+use PhpCsFixer\Tokenizer\CT;
 use PhpCsFixer\Tokenizer\Token;
 use PhpCsFixer\Tokenizer\Tokens;
 
@@ -24,25 +25,25 @@ class SpaceInsideSquareBracketsFixer extends AbstractFixer
 
 	public function isCandidate(Tokens $tokens):bool
 	{
-		return $tokens->isTokenKindFound('[') || $tokens->isTokenKindFound(']');
+		return $tokens->isTokenKindFound( CT::T_ARRAY_SQUARE_BRACE_OPEN ) || $tokens->isTokenKindFound( CT::T_ARRAY_SQUARE_BRACE_CLOSE );
 	}
 
 	public function applyFix(\SplFileInfo $file, Tokens $tokens):void
 	{
 		foreach ($tokens as $index => $token) {
-			if ( ! $token->equals( '[' ) && ! $token->equals( ']' ) ) {
+			if ( ! $token->isGivenKind( CT::T_ARRAY_SQUARE_BRACE_OPEN ) && ! $token->isGivenKind( CT::T_ARRAY_SQUARE_BRACE_CLOSE ) ) {
 				continue;
 			}
 
-			if ( $token->equals( '[' ) ) {
-				if (!$tokens[$index + 1]->isWhitespace() && !$tokens[$index + 1]->equals( ']' )) {
-					$tokens->insertAt($index + 1, new Token([T_WHITESPACE, ' ']));
+			if ( $token->isGivenKind( CT::T_ARRAY_SQUARE_BRACE_OPEN ) ) {
+				if (!$tokens[$index + 1]->isWhitespace() && !$tokens[$index + 1]->isGivenKind( CT::T_ARRAY_SQUARE_BRACE_CLOSE )) {
+					$tokens->insertAt($index + 1, new Token([ T_WHITESPACE, ' ' ]));
 				}
 			}
 
-			if ( $token->equals( ']' ) ) {
-				if (!$tokens[$index - 1]->isWhitespace() && !$tokens[$index - 1]->equals( '[' )) {
-					$tokens->insertAt($index, new Token([T_WHITESPACE, ' ']));
+			if ( $token->isGivenKind( CT::T_ARRAY_SQUARE_BRACE_CLOSE ) ) {
+				if (!$tokens[$index - 1]->isWhitespace() && !$tokens[$index - 1]->isGivenKind( CT::T_ARRAY_SQUARE_BRACE_OPEN )) {
+					$tokens->insertAt($index, new Token([ T_WHITESPACE, ' ' ]));
 				}
 			}
 		}
